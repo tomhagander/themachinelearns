@@ -1,9 +1,6 @@
 
 # breadth first and depth first search for solutions to the problem with two pitchers
 
-
-# states: the fills of pitchers. Tuple (p3, p5)?
-
 # actions: 
 # - Fill p3 from tap -> p3 = 3
 # - Pour p3 to p5 until p5 full
@@ -80,7 +77,7 @@ frontier = [s0]
 visited = [s0]
 
 while not success:
-    # pick newest state from frontier
+    # pick state from frontier
     print(frontier)
     if search_method == 'depth':
         s = frontier.pop()
