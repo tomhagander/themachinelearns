@@ -69,8 +69,11 @@ class State:
     def isTerminal(self):
         return self.p5 == 4
 
+
+# configureable stuff
 s0 = State(0, 0, [])
-search_method = 'depth' # or 'breadth'
+search_method = 'Astar' # 'depth' or 'breadth' or 'Astar'
+print(search_method)
 success = False
 goal_seq = []
 frontier = [s0]
@@ -83,6 +86,16 @@ while not success:
         s = frontier.pop()
     elif search_method == 'breadth':
         s = frontier.pop(0)
+    elif search_method == 'Astar':
+        min_cost = float('inf') # number larger than all others
+        best_idx = None # will be assigned value if frontier not empty
+        for i, candidate in enumerate(frontier):
+            travelled_dist = len(candidate.history) # chosen to be how many times pitchers have been moved
+            flight_dist = abs(candidate.p5 - 4) # chosen to be difference to 4 in liters of 5L pitcher
+            if travelled_dist + flight_dist < min_cost:
+                min_cost = travelled_dist + flight_dist
+                best_idx = i
+        s = frontier.pop(best_idx)
 
     # expanding
     for action_nbr in reversed(range(1, 6)):
