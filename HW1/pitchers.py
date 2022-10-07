@@ -97,7 +97,7 @@ while not success:
                 best_idx = i
         s = frontier.pop(best_idx)
 
-    # expanding
+    # expanding (results differ for greedy if range is reversed or not, which is to be expected)
     for action_nbr in reversed(range(1, 6)):
         s_new = s.take_action(action_nbr)
         if s_new.isTerminal():
