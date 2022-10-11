@@ -2,10 +2,11 @@ import csv
 import matplotlib.pyplot as plt
 
 class Point():
-    def __init__(self, x, y):
+    def __init__(self, x, y, history=[]):
         self.x = x
         self.y = y
-        self.history = [] #faaaan detta får inte vara. En instans av en punkt räcker inte isåfall, eftersom vi måste kunna komma till den flera gånger.
+        self.history = history
+        self.history.append((self.x, self.y))
         self.travelled_distance = 0
 
     def __repr__(self):
@@ -17,50 +18,52 @@ class Point():
     def plot_history(self):
         fig = plt.figure()
         ax = fig.add_subplot()
-        for p in points:
-            plt.scatter(p.x, p.y, color='limegreen')
+        for p in coords:
+            plt.scatter(p[0], p[1], color='limegreen')
         plt.plot(*zip(*self.history), color='r')
         plt.grid()
+        plt.title(search_method)
         ax.set_aspect('equal', adjustable='box')
         # plt show at end of script
 
-points = []
+coords = []
 # importing csv
 with open('HW1data.csv', newline='') as csvfile:
     reader = csv.reader(csvfile, delimiter=',')
     for row in reader:
-        points.append(Point(float(row[0]), float(row[1])))
+        coords.append((float(row[0]), float(row[1])))
 
 # config
 search_method = 'greedy' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions'
 
-def geom_distance(p1, p2):
-    return ((p1.x - p2.x)**2 + (p1.y - p2.y)**2)**0.5
+def geom_distance(point, coord):
+    return ((point.x - coord[0])**2 + (point.y - coord[1])**2)**0.5
 
-def cost(p1, p2):
+def cost(point, goal_coord):
     if search_method == 'greedy':
-        return ((p1.x - p2.x)**2 + (p1.y - p2.y)**2)**0.5
+        return ((point.x - goal_coord[0])**2 + (point.y - goal_coord[1])**2)**0.5
     elif search_method == 'branchandbound_actions':
-        return len(p1.history)
+        return len(point.history)
     elif search_method == 'branchandbound_distance':
-        return p1.travelled_distance
+        return point.travelled_distance
+    else:
+        print('invalid input')
 
 def find_available_actions(current):
-    visited.append(current)
+    visited.append((current.x, current.y))
     availables = []
-    for point in points:
-        if geom_distance(current, point) < 1.3 and point not in visited: # skips all visited
+    for coord in coords:
+        if geom_distance(current, coord) < 1.3 and coord not in visited: # skips all visited
             #creating history for new point
-            point.history = current.history.copy()
-            point.history.append((point.x, point.y))
-            point.travelled_distance = current.travelled_distance + geom_distance(current, point)
+            point = Point(coord[0], coord[1], current.history.copy())
+            point.travelled_distance = current.travelled_distance + geom_distance(current, coord)
             #adding new point to availables
             availables.append(point)
     return availables 
 
-I = points[0] #start at (0,0)
+I = Point(coords[0][0], coords[0][1]) #start at (0,0)
 I.history = [(0,0)]
-G = points[-1] #goal
+G_coord = coords[-1] #goal
 frontier = [I]
 visited = []
 success = False
@@ -71,7 +74,7 @@ while not success:
     best_point_idx = None
     for idx, point in enumerate(frontier):
 
-        if geom_distance(point, G) == 0: #checks if terminal
+        if geom_distance(point, G_coord) == 0: #checks if terminal
             # terminal
             print('terminal')
             print(point)
@@ -81,8 +84,8 @@ while not success:
             success = True
             break
 
-        elif cost(point, G) < min_cost: #checks if point is better than points before in frontier
-            min_cost = cost(point, G)
+        elif cost(point, G_coord) < min_cost: #checks if point is better than points before in frontier
+            min_cost = cost(point, G_coord)
             best_point_idx = idx
     best_point = frontier.pop(best_point_idx)
 
