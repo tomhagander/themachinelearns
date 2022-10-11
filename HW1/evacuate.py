@@ -34,18 +34,20 @@ with open('HW1data.csv', newline='') as csvfile:
         coords.append((float(row[0]), float(row[1])))
 
 # config
-search_method = 'greedy' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions'
+search_method = 'Astar' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions'
 
 def geom_distance(point, coord):
     return ((point.x - coord[0])**2 + (point.y - coord[1])**2)**0.5
 
 def cost(point, goal_coord):
     if search_method == 'greedy':
-        return ((point.x - goal_coord[0])**2 + (point.y - goal_coord[1])**2)**0.5
+        return geom_distance(point, goal_coord)
     elif search_method == 'branchandbound_actions':
         return len(point.history)
     elif search_method == 'branchandbound_distance':
         return point.travelled_distance
+    elif search_method == 'Astar':
+        return point.travelled_distance + geom_distance(point, goal_coord)
     else:
         print('invalid input')
 
