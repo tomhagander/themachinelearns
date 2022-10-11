@@ -11,6 +11,9 @@
 # breadth first - explore oldest state in frontier
 # depth first - explore newest state in frontier
 
+# unresolved: Take goal as soon as its seen?
+# Add states already in frontier to frontier?
+
 class State:
     def __init__(self, p3, p5, history):
         self.p3 = p3
@@ -28,13 +31,13 @@ class State:
 
     def take_action(self, idx):
         history = self.history.copy()
-        if idx == 1:
+        if idx == 1: #fill p3
             p3 = 3
             p5 = self.p5
             history.append(1)
             return State(p3, p5, history)
 
-        elif idx == 2:
+        elif idx == 2: #pour p3 to p5
             if (5 - self.p5 >= self.p3):
                 p3 = 0
                 p5 = self.p5 + self.p3
@@ -44,7 +47,7 @@ class State:
             history.append(2)
             return State(p3, p5, history)
 
-        elif idx == 3:
+        elif idx == 3: #pour p5 to p3
             if (3 - self.p3 >= self.p5):
                 p3 = self.p3 + self.p5
                 p5 = 0
@@ -54,13 +57,13 @@ class State:
             history.append(3)
             return State(p3, p5, history)
 
-        elif idx == 4:
+        elif idx == 4: #empty p3
             p3 = 0
             p5 = self.p5
             history.append(4)
             return State(p3, p5, history)
 
-        elif idx == 5:
+        elif idx == 5: # empty p5
             p3 = self.p3
             p5 = 0
             history.append(5)
@@ -98,11 +101,11 @@ while not success:
         s = frontier.pop(best_idx)
 
     # expanding (results differ for greedy if range is reversed or not, which is to be expected)
-    for action_nbr in reversed(range(1, 6)):
+    for action_nbr in (range(1, 6)): #checking all actions 1-5 to see if they are (1) terminal or (2) viable
         s_new = s.take_action(action_nbr)
         if s_new.isTerminal():
             success = True
-            goal_sec = s_new.history
+            goal_seq = s_new.history
             print('terminal')
             break
         elif s_new not in visited:
@@ -110,4 +113,4 @@ while not success:
             frontier.append(s_new)
 
 print('history')
-print(goal_sec)
+print(goal_seq)
