@@ -34,7 +34,7 @@ with open('HW1data.csv', newline='') as csvfile:
         coords.append((float(row[0]), float(row[1])))
 
 # config
-search_method = 'Astar' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions'
+search_method = 'branchandbound_distance' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions' or 'Astar'
 
 def geom_distance(point, coord):
     return ((point.x - coord[0])**2 + (point.y - coord[1])**2)**0.5
@@ -63,37 +63,39 @@ def find_available_actions(current):
             availables.append(point)
     return availables 
 
-I = Point(coords[0][0], coords[0][1]) #start at (0,0)
-I.history = [(0,0)]
-G_coord = coords[-1] #goal
+I = Point(0,0) #start at (0,0)
+G_coord = (10, 10) #goal
 frontier = [I]
 visited = []
 success = False
 
+ctr = 0
 while not success:
     # pick best point from frontier using cost function defined above
     min_cost = float('inf')
     best_point_idx = None
     for idx, point in enumerate(frontier):
-
-        if geom_distance(point, G_coord) == 0: #checks if terminal
-            # terminal
-            print('terminal')
-            print(point)
-            print(point.history)
-            point.plot_history()
-            print(len(point.history))
-            success = True
-            break
-
-        elif cost(point, G_coord) < min_cost: #checks if point is better than points before in frontier
+        if cost(point, G_coord) < min_cost: #checks if point is better than points before in frontier
             min_cost = cost(point, G_coord)
             best_point_idx = idx
     best_point = frontier.pop(best_point_idx)
+    if geom_distance(best_point, G_coord) == 0: #checks if terminal
+        # terminal
+        print('terminal')
+        print(best_point)
+        print(best_point.history)
+        best_point.plot_history()
+        print(len(best_point.history))
+        print(best_point.travelled_distance)
+        success = True
+        break
 
     availables = find_available_actions(best_point)
+    ctr += 1
 
-    # adding availables to frontier. Maybe make frontier into a min_heap here? Current implementation works too, dont know which is faster
+    # adding availables to frontier. 
     frontier = frontier + availables
 
+print('nodes expanded: ' + str(ctr))
+print((visited))
 plt.show()

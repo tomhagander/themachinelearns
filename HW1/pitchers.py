@@ -75,14 +75,16 @@ class State:
 
 # configureable stuff
 s0 = State(0, 0, [])
-search_method = 'Astar' # 'depth' or 'breadth' or 'Astar'
+search_method = 'breadth' # 'depth' or 'breadth' or 'Astar'
 print(search_method)
 success = False
 goal_seq = []
 frontier = [s0]
 visited = [s0]
 
+ctr = 0
 while not success:
+    ctr += 1
     # pick state from frontier
     print(frontier)
     if search_method == 'depth':
@@ -114,3 +116,4 @@ while not success:
 
 print('history')
 print(goal_seq)
+print(ctr)
