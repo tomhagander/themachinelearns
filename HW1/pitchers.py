@@ -75,7 +75,7 @@ class State:
 
 # configureable stuff
 s0 = State(0, 0, [])
-search_method = 'breadth' # 'depth' or 'breadth' or 'Astar'
+search_method = 'depth' # 'depth' or 'breadth' or 'Astar'
 print(search_method)
 success = False
 goal_seq = []
@@ -103,7 +103,7 @@ while not success:
         s = frontier.pop(best_idx)
 
     # expanding (results differ for greedy if range is reversed or not, which is to be expected)
-    for action_nbr in (range(1, 6)): #checking all actions 1-5 to see if they are (1) terminal or (2) viable
+    for action_nbr in reversed(range(1, 6)): #checking all actions 1-5 to see if they are (1) terminal or (2) viable
         s_new = s.take_action(action_nbr)
         if s_new.isTerminal():
             success = True

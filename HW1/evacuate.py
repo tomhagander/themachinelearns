@@ -34,7 +34,7 @@ with open('HW1data.csv', newline='') as csvfile:
         coords.append((float(row[0]), float(row[1])))
 
 # config
-search_method = 'branchandbound_distance' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions' or 'Astar'
+search_method = 'Astar' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions' or 'Astar'
 
 def geom_distance(point, coord):
     return ((point.x - coord[0])**2 + (point.y - coord[1])**2)**0.5
@@ -55,7 +55,7 @@ def find_available_actions(current):
     visited.append((current.x, current.y))
     availables = []
     for coord in coords:
-        if geom_distance(current, coord) < 1.3 and coord not in visited: # skips all visited
+        if geom_distance(current, coord) < 1.3 and coord not in visited:
             #creating history for new point
             point = Point(coord[0], coord[1], current.history.copy())
             point.travelled_distance = current.travelled_distance + geom_distance(current, coord)
@@ -97,5 +97,4 @@ while not success:
     frontier = frontier + availables
 
 print('nodes expanded: ' + str(ctr))
-print((visited))
 plt.show()
