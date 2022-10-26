@@ -34,7 +34,7 @@ with open('HW1data.csv', newline='') as csvfile:
         coords.append((float(row[0]), float(row[1])))
 
 # config
-search_method = 'Astar' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions' or 'Astar'
+search_method = 'branchandbound_actions' # 'greedy' or 'branchandbound_distance' or 'branchandbound_actions' or 'Astar'
 
 def geom_distance(point, coord):
     return ((point.x - coord[0])**2 + (point.y - coord[1])**2)**0.5
